@@ -5,12 +5,23 @@ const ExamsTakenSchema = {
     takenAt: Date
 }
 const schema = new mongoose.Schema({
-    type: String,
     username: {
         type: String,
-        unique: true
+        unique: true, 
+        required: true
     },
-    password: String,
+    password: {
+        type: String,
+        required: true,
+    },
+    isTeacher: {
+        type: Boolean,
+        required: true
+     },
+    dateOfRegistration: {
+        type: Date,
+        default: Date.now
+    },
     examsTaken: [ExamsTakenSchema]
 });
 
