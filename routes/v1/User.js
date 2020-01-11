@@ -15,15 +15,10 @@ router.get("/users", async (req, res, next) => {
 
 router.post("/users", async (req, res, next) => {
     console.log(req);
-    // let test = {
-    //     username: "testSubject",
-    //     password: "123456789123",
-    //     isTeacher: true,
-    //     examsTaken: []
-    // }
     try{
         // console.log(req);
-        const user = await User.insertOne(req.body);
+        console.log("body",req.body);
+        const user = await User.create(req.body);
         res.status(202).json({user});
         // console.log(res);
     } 
