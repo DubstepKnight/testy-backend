@@ -12,25 +12,28 @@ router.get("/users", async (req, res, next) => {
     catch(err){
         console.log(err);
         res.status(500).json({err}).send({
-            message: "nNternal server error"
+            message: "Internal server error"
         });
     }
 })
 
 router.post("/users", async (req, res, next) => {
-    console.log(req);
+    // console.log(req);
     try{
         // console.log(req);
         console.log("body",req.body);
+        // let hashedPassword = crypto.createHmac('sha256', req.body.password).update().final();
+        // console.log(hashedPassword);
         const user = await User.create(req.body);
         res.status(202).json({user});
         // console.log(res);
     } 
     catch(err){
-        res.status(500).json({err}).send({
-            message: "Internal Server Error"
-        });
+        res.status(500).json({err});
+        console.log(err);
     }
 })
+
+// router.get("/users/login")
 
 module.exports = router;
