@@ -5,7 +5,7 @@ const ExamsTakenSchema = {
     takenAt: Date
 }
 const schema = new mongoose.Schema({
-    email: {
+    username: {
         type: String,
         unique: true, 
         required: true
