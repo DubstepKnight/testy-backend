@@ -20,12 +20,16 @@ router.get("/users", async (req, res, next) => {
 router.post("/users", async (req, res, next) => {
     // console.log(req);
     try{
-        // console.log(req);
-        console.log("body",req.body);
-        // let hashedPassword = crypto.createHmac('sha256', req.body.password).update().final();
-        // console.log(hashedPassword);
-        const user = await User.create(req.body);
-        res.status(202).json({user});
+        let password = req.body.password;
+        let hashedPassword = crypto.createHmac('sha256', password).update("anything").digest("hex");
+        let hashedPasswordBody = {
+            ...req.body,
+            password: hashedPassword
+        }
+        console.log(hashedPassword);
+        console.log(hashedPasswordBody);
+        // const user = await User.create(req.body);
+        // res.status(202).json({user});
         // console.log(res);
     } 
     catch(err){
