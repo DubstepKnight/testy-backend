@@ -1,7 +1,6 @@
 const mongoose = require("mongoose");
 
 const QuestionSchema = {
-    category: String,
     question: String
 }
 
@@ -19,6 +18,7 @@ const schema = new mongoose.Schema({
     createdAt: Date,
     updatedAt: Date,
     questions: [QuestionSchema],
+    category: String,
     name: String,
     examsTaken: [examsTaken]
 });
