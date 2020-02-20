@@ -1,6 +1,6 @@
 const express = require("express");
 const jwt = require("jsonwebtoken");
-const jwtKey = "BWWbCs!|W;e*oU.YWA_W+6jposJGR-";
+const jwtKey = require("../../jwtKey.json");
 const router = new express.Router();
 const User = require("../../models/User");
 const crypto = require("crypto");
@@ -11,12 +11,12 @@ function generateToken(user) {
       {
         ...user,
       },
-      jwtKey,
+      jwtKey.key,
       { expiresIn: "7d" }
     );
     console.log(token);
     return token;
-  }
+}
 
 const genRandomString = (length) => {
     return crypto.randomBytes(Math.ceil(length/2))
@@ -40,7 +40,7 @@ const saltHashPassword = (userpassword) => {
     return passwordData;
 }
 
-router.post("/users/register", async (req, res, next) => {
+router.post("/users/register",  async (req, res, next) => {
 
     // console.log(req);
     try{
@@ -62,7 +62,7 @@ router.post("/users/register", async (req, res, next) => {
     }
 })
 
-router.post("/users/login", async (req, res, next) => {
+router.post("/users/login",  async (req, res, next) => {
     // console.log("req.body: " +req.body);
     try {
         const user = await User.find({username: req.body.username });

@@ -1,13 +1,20 @@
 const express = require("express");
 const app = express();
-const routes = require("./routes");
 const cors = require("cors");
+
+// const routes = require("./routes");
+const usersRoute = require("./routes/v1/Users");
+const examsRoute = require("./routes/v1/Exams");
+const questionsRoute = require("./routes/v1/Questions");
 
 app.use(express.json());
 app.use(cors());
 
-routes(app);
+// routes(app);
 
+app.use("/v1", usersRoute);
+app.use("/v1", examsRoute);
+app.use("/v1", questionsRoute);
 
 const mongoose = require("mongoose");
 (async _ => {

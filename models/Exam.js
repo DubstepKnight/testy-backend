@@ -1,25 +1,30 @@
 const mongoose = require("mongoose");
 
-const QuestionSchema = {
-    question: String
-}
-
 const questionForExamTaken = {
-    question: String,
+    question: [{type: mongoose.Schema.Types.ObjectId, ref: 'Question'}],
     answer: String,
     points: Number
 }
+
 const examsTaken = {
    questions: [questionForExamTaken],
    accessed: Boolean
 }
 const schema = new mongoose.Schema({
-    type: String,
-    createdAt: Date,
-    updatedAt: Date,
-    questions: [QuestionSchema],
+    // type: String,
+    name: {
+        type: String,
+        required: true
+    },
+    createdAt: {
+        type: Date,
+        default: Date.now
+    },
+    updatedAt:{
+        type: Date
+    },
+    questions: [{type: mongoose.Schema.Types.ObjectId, ref: 'Question'}],
     category: String,
-    name: String,
     examsTaken: [examsTaken]
 });
 

@@ -1,4 +1,4 @@
-const v1 = require("./v1/User", "./v1/Exam");
-module.exports = (app) => {
-    app.use("/v1", v1);
-}
+// const v1 = require("./v1/Exams", "./v1/Users", "./v1/Questions" );
+// module.exports = (app) => {
+//     app.use("/v1", v1);
+// }
