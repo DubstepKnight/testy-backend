@@ -28,13 +28,51 @@ router.get("/exams", isAuth.authenticate("jwt", {session: false} ), async (req, 
     }
 });
 
-router.get("/exams/:id", isAuth.authenticate("jwt", {session: false} ), (req, res) =>{
+router.get("/exams/:id", isAuth.authenticate("jwt", {session: false} ), async (req, res) =>{
+    let examId = req.params.id;
+    // console.log(examId);
     try {
-        console.log("It managed");
+        const oneExam = await Exam.findById(examId);
+        // console.log(oneExam);
+        res.send(oneExam);
+        // console.log("It managed");
     }
     catch(error) {
+        console.log(error);
+        res.send(error);
+    }
+});
+
+router.put("/exams/:id", isAuth.authenticate("jwt", {session: false} ), async (req, res) =>{
+    let examId = req.params.id;
+    let editedExam = req.body;
+    try {
+        await Exam.findByIdAndUpdate(
+            examId,
+            editedExam,
+            {new: true}
+        )
+        // console.log(oneQuestion);
+        res.send(editedExam).status(200);
+    }
+    catch(error) {
+        console.log(error);
+        res.send(error).status(500);
         console.log("There is your error");
     }
-})
+});
+
+router.delete("/exams/:id", isAuth.authenticate("jwt", {session: false} ), async (req, res) =>{
+    let examId = req.params.id;
+    try {
+       const oneExam = await Exam.findByIdAndDelete(examId);
+       console.log(oneExam);
+       res.send(oneExam).status(200)
+    }
+    catch(error) {
+        console.log(error);
+        res.send(error).status(500);
+    }
+});
 
 module.exports = router;

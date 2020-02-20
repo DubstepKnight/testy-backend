@@ -42,8 +42,8 @@ router.get("/questions/:id", isAuth.authenticate("jwt", { session: false } ), as
 });
 
 router.put("/questions/:id", isAuth.authenticate("jwt", { session: false } ), async (req, res) =>{
-    console.log(req.params.id);
-    console.log(req.body);
+    // console.log(req.params.id);
+    // console.log(req.body);
     let questionId = req.params.id;
     let editedQuestion = req.body;
     try {
@@ -53,7 +53,7 @@ router.put("/questions/:id", isAuth.authenticate("jwt", { session: false } ), as
             {new: true}
         )
         // console.log(oneQuestion);
-        res.send("Successful change of the question: " + editedQuestion.question);
+        res.send(editedQuestion.question).status(200);
     }
     catch(error) {
         res.send(error);

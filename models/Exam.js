@@ -11,7 +11,10 @@ const examsTaken = {
    accessed: Boolean
 }
 const schema = new mongoose.Schema({
-    // type: String,
+    isRandom: {
+        type: String,
+        required: true
+    },
     name: {
         type: String,
         required: true
