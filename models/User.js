@@ -2,7 +2,10 @@ const mongoose = require("mongoose");
 const ExamsTakenSchema = {
     examId: mongoose.Schema.Types.ObjectId,
     points: Number,
-    takenAt: Date
+    takenAt: {
+       type: Date,
+       default: Date.now
+    }
 }
 const schema = new mongoose.Schema({
     username: {

@@ -15,6 +15,9 @@ const schema = new mongoose.Schema({
         type: String,
         required: true
     },
+    numberOfQuestionsIfRandom: {
+        type: Number
+    },
     name: {
         type: String,
         required: true

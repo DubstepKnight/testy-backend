@@ -2,11 +2,31 @@ const express = require("express");
 const router = new express.Router();
 const Exam = require("../../models/Exam");
 const isAuth = require("../../middleware/isAuth");
+const isTeacher = require("../../middleware/isTeacher");
 
-router.post("/exams", isAuth.authenticate("jwt", {session: false} ), async (req, res) =>{
+router.post("/exams", 
+            isAuth.authenticate("jwt", {session: false} ),
+            isTeacher, 
+            async (req, res) =>{
+        console.log(req.body);
+        console.log("isRandom: ", req.body.isRandom);
+        try {
+            let newExam = await Exam.create(req.body);
+            console.log(newExam);
+            res.send(newExam).status(201);
+        }
+        catch(error) {
+            console.log(error);
+            res.send(error);
+        }
+})
+
+router.post("/exams/take", 
+            isAuth.authenticate("jwt", {session: false} ), 
+            async (req, res) =>{
     console.log(req.body);
     try {
-        let newExam = await Exam.create(req.body);
+        // let newExam = await Exam.create(req.body);
         console.log(newExam);
         res.send(newExam).status(201);
     }
@@ -34,7 +54,7 @@ router.get("/exams/:id", isAuth.authenticate("jwt", {session: false} ), async (r
     try {
         const oneExam = await Exam.findById(examId);
         // console.log(oneExam);
-        res.send(oneExam);
+        res.send(oneExam).status(200);
         // console.log("It managed");
     }
     catch(error) {
@@ -43,7 +63,10 @@ router.get("/exams/:id", isAuth.authenticate("jwt", {session: false} ), async (r
     }
 });
 
-router.put("/exams/:id", isAuth.authenticate("jwt", {session: false} ), async (req, res) =>{
+router.put("/exams/:id", 
+          isAuth.authenticate("jwt", {session: false} ),
+          isTeacher,
+          async (req, res) =>{
     let examId = req.params.id;
     let editedExam = req.body;
     try {
@@ -62,7 +85,10 @@ router.put("/exams/:id", isAuth.authenticate("jwt", {session: false} ), async (r
     }
 });
 
-router.delete("/exams/:id", isAuth.authenticate("jwt", {session: false} ), async (req, res) =>{
+router.delete("/exams/:id", 
+             isAuth.authenticate("jwt", {session: false} ), 
+             isTeacher, 
+             async (req, res) =>{
     let examId = req.params.id;
     try {
        const oneExam = await Exam.findByIdAndDelete(examId);

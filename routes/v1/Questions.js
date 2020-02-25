@@ -1,9 +1,14 @@
 const express = require("express");
 const router = new express.Router();
 const isAuth = require("../../middleware/isAuth");
+const isTeacher = require("../../middleware/isTeacher");
 const Questions = require("../../models/Question");
+const mongoose = require("mongoose");
 
-router.post("/questions", isAuth.authenticate("jwt", { session: false } ), async (req, res) =>{
+router.post("/questions", 
+            isAuth.authenticate("jwt", { session: false } ), 
+            isTeacher,
+            async (req, res) =>{
     console.log(req.body);
     try {
         let newQuestion =  await Questions.create(req.body);
@@ -17,14 +22,29 @@ router.post("/questions", isAuth.authenticate("jwt", { session: false } ), async
 });
 
 router.get("/questions", isAuth.authenticate("jwt", { session: false } ), async (req, res) =>{
-    console.log(req);
-    try {
-        let allQuestions = await Questions.find();
-        res.send(allQuestions).status(202);
-    }
-    catch(error) {
-        console.log(error);
-        res.send(error);
+    if (req.body.questions) {
+        console.log(req.body.questions);
+        let questionIds = req.body.questions;
+        try {
+            let severalQuestions = await Questions.find({
+                _id: { $in: questionIds}
+            })
+            console.log(severalQuestions);
+            res.send(severalQuestions);
+        }
+        catch(error) {
+            console.log(error);
+            res.send(error);
+        }
+    } else {
+        try {
+            let allQuestions = await Questions.find();
+            res.send(allQuestions).status(202);
+        }
+        catch(error) {
+            console.log(error);
+            res.send(error);
+        }
     }
 });
 
@@ -41,7 +61,10 @@ router.get("/questions/:id", isAuth.authenticate("jwt", { session: false } ), as
     }
 });
 
-router.put("/questions/:id", isAuth.authenticate("jwt", { session: false } ), async (req, res) =>{
+router.put("/questions/:id", 
+            isAuth.authenticate("jwt", { session: false } ), 
+            isTeacher,
+            async (req, res) =>{
     // console.log(req.params.id);
     // console.log(req.body);
     let questionId = req.params.id;
@@ -53,14 +76,17 @@ router.put("/questions/:id", isAuth.authenticate("jwt", { session: false } ), as
             {new: true}
         )
         // console.log(oneQuestion);
-        res.send(editedQuestion.question).status(200);
+        res.send(editedQuestion).status(200);
     }
     catch(error) {
         res.send(error);
     }
 });
 
-router.delete("/questions/:id", isAuth.authenticate("jwt", { session: false } ), async (req, res) =>{
+router.delete("/questions/:id", 
+            isAuth.authenticate("jwt", { session: false } ), 
+            isTeacher,
+            async (req, res) =>{
     console.log(req.params.id);
     let questionId = req.params.id;
     try {

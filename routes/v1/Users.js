@@ -86,6 +86,8 @@ router.post("/users/login",  async (req, res, next) => {
         res.status(500).json({err});
         console.log(err);
     }
-})
+});
+
+// router.get()
 
 module.exports = router;
