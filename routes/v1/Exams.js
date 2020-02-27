@@ -1,6 +1,7 @@
 const express = require("express");
 const router = new express.Router();
 const Exam = require("../../models/Exam");
+const User = require("../../models/User");
 const isAuth = require("../../middleware/isAuth");
 const isTeacher = require("../../middleware/isTeacher");
 
@@ -25,10 +26,28 @@ router.post("/exams/take",
             isAuth.authenticate("jwt", {session: false} ), 
             async (req, res) =>{
     console.log(req.body);
+    let examId = req.body.examId;
+    let takenExamData = req.body.takenExamData;
     try {
-        // let newExam = await Exam.create(req.body);
-        console.log(newExam);
-        res.send(newExam).status(201);
+        let examBeingTaken = await Exam.findById(examId);
+        examBeingTaken.examsTaken.push(takenExamData);
+        let updatedExam = await examBeingTaken.save();
+        let examTaker = await User.findById(takenExamData.takenBy);
+        let acquredPoints = takenExamData.questions.filter(question => question.answer === question.rightAnswer).reduce(
+            (accumulator, currentValue) => accumulator + currentValue.questionValue, 0);
+        console.log("acquredPoints: ", acquredPoints);
+        let examHistoryData = {
+            examId: examId,
+            pointsGot: acquredPoints,
+            maximumPoints: takenExamData.maximumPoints,
+        }
+        examTaker.examsTaken.push(examHistoryData);
+        let updateHistory = await examTaker.save();
+        let wholeResponse = {
+            updatedExam,
+            updateHistory
+        };
+        res.send(wholeResponse).status(201);
     }
     catch(error) {
         console.log(error);
@@ -63,10 +82,23 @@ router.get("/exams/:id", isAuth.authenticate("jwt", {session: false} ), async (r
     }
 });
 
+router.get("/exams/history/:userId",
+           isAuth.authenticate("jwt", {session: false} ),
+           async (req, res) => {
+    console.log("it gets to exams/history");
+    try {
+        console.log(req.parms.userId);
+    }
+    catch (error) {
+        console.log(error);
+        res.send(error).status(400);
+    }
+})
+
 router.put("/exams/:id", 
           isAuth.authenticate("jwt", {session: false} ),
           isTeacher,
-          async (req, res) =>{
+          async (req, res) => {
     let examId = req.params.id;
     let editedExam = req.body;
     try {

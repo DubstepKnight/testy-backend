@@ -1,20 +1,32 @@
 const mongoose = require("mongoose");
 
 const questionForExamTaken = {
-    question: [{type: mongoose.Schema.Types.ObjectId, ref: 'Question'}],
-    answer: String,
-    points: Number
+    question: {type: mongoose.Schema.Types.ObjectId, ref: 'Question'},
+    answer: {
+        type: String,
+        required: true
+    },
+    rightAnswer: {
+        type: String,
+        required: true
+    },
+    questionValue: {
+        type: Number,
+        required: true
+    }
 }
 
-const examsTaken = {
+const examTaken = {
    questions: [questionForExamTaken],
-   accessed: Boolean
+   takenBy: {type: mongoose.Schema.Types.ObjectId, ref: 'User'}
 }
+
 const schema = new mongoose.Schema({
     isRandom: {
         type: String,
         required: true
     },
+    personalFor: [{type: mongoose.Schema.Types.ObjectId, ref: 'User'}],
     numberOfQuestionsIfRandom: {
         type: Number
     },
@@ -29,9 +41,13 @@ const schema = new mongoose.Schema({
     updatedAt:{
         type: Date
     },
+    maximumPoints: {
+        type: Number,
+        required: true
+    },
     questions: [{type: mongoose.Schema.Types.ObjectId, ref: 'Question'}],
     category: String,
-    examsTaken: [examsTaken]
+    examsTaken: [examTaken]
 });
 
 const model = new mongoose.model("Exam", schema);

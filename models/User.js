@@ -1,7 +1,14 @@
 const mongoose = require("mongoose");
 const ExamsTakenSchema = {
     examId: mongoose.Schema.Types.ObjectId,
-    points: Number,
+    pointsGot: {
+        type: Number,
+        required: true
+    },
+    maximumPoints: {
+        type: Number,
+        required: true
+    },
     takenAt: {
        type: Date,
        default: Date.now
