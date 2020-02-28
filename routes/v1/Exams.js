@@ -48,7 +48,7 @@ router.post("/exams/take",
         let examHistoryData = {
             examId: examId,
             pointsGot: acquredPoints,
-            // maximumPoints: takenExamData.maximumPoints,
+            maximumPoints: takenExamData.maximumPoints,
         }
         examTaker.examsTaken.push(examHistoryData);
         let updateHistory = await examTaker.save();
