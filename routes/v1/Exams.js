@@ -11,8 +11,14 @@ router.post("/exams",
             async (req, res) =>{
         console.log(req.body);
         console.log("isRandom: ", req.body.isRandom);
+        let exam = req.body;
         try {
-            let newExam = await Exam.create(req.body);
+            let maximumPoints = exam.questions.reduce((accumulator, currentValue) => accumulator + currentValue.questionValue, 0)
+            let almostNewExam = {
+                ...exam,
+                maximumPoints
+            }
+            let newExam = await Exam.create(almostNewExam);
             console.log(newExam);
             res.send(newExam).status(201);
         }
@@ -28,18 +34,21 @@ router.post("/exams/take",
     console.log(req.body);
     let examId = req.body.examId;
     let takenExamData = req.body.takenExamData;
+    let username = req.user[0].username;
+    console.log("username: ", username);
     try {
         let examBeingTaken = await Exam.findById(examId);
         examBeingTaken.examsTaken.push(takenExamData);
+        console.log("examBeingTaken: ", examBeingTaken);
+        console.log("examBeingTaken.examsTaken.takenBy: ", examBeingTaken.examsTaken);
         let updatedExam = await examBeingTaken.save();
         let examTaker = await User.findById(takenExamData.takenBy);
         let acquredPoints = takenExamData.questions.filter(question => question.answer === question.rightAnswer).reduce(
             (accumulator, currentValue) => accumulator + currentValue.questionValue, 0);
-        console.log("acquredPoints: ", acquredPoints);
         let examHistoryData = {
             examId: examId,
             pointsGot: acquredPoints,
-            maximumPoints: takenExamData.maximumPoints,
+            // maximumPoints: takenExamData.maximumPoints,
         }
         examTaker.examsTaken.push(examHistoryData);
         let updateHistory = await examTaker.save();
@@ -82,19 +91,6 @@ router.get("/exams/:id", isAuth.authenticate("jwt", {session: false} ), async (r
     }
 });
 
-router.get("/exams/history/:userId",
-           isAuth.authenticate("jwt", {session: false} ),
-           async (req, res) => {
-    console.log("it gets to exams/history");
-    try {
-        console.log(req.parms.userId);
-    }
-    catch (error) {
-        console.log(error);
-        res.send(error).status(400);
-    }
-})
-
 router.put("/exams/:id", 
           isAuth.authenticate("jwt", {session: false} ),
           isTeacher,
@@ -132,5 +128,37 @@ router.delete("/exams/:id",
         res.send(error).status(500);
     }
 });
+
+router.get("/exams/:id/history/",
+           isAuth.authenticate("jwt", {session: false} ),
+           isTeacher,
+           async (req, res) => {
+    let examId = req.params.id;
+    console.log("it gets to exams/history");
+    try {
+        console.log(req.params.id);
+        let historyOfOneExam = await Exam.findById(examId);
+        console.log(historyOfOneExam.examsTaken);
+        res.send(historyOfOneExam.examsTaken).status(200);
+    }
+    catch (error) {
+        console.log(error);
+        res.send(error).status(400);
+    }
+})
+
+router.get("/exams/history/:userId",
+           isAuth.authenticate("jwt", {session: false} ),
+           isTeacher,
+           async (req, res) => {
+    console.log("it gets to exams/history");
+    try {
+        console.log(req.params.userId);
+    }
+    catch (error) {
+        console.log(error);
+        res.send(error).status(400);
+    }
+})
 
 module.exports = router;

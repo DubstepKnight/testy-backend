@@ -18,7 +18,18 @@ const questionForExamTaken = {
 
 const examTaken = {
    questions: [questionForExamTaken],
-   takenBy: {type: mongoose.Schema.Types.ObjectId, ref: 'User'}
+   takenBy: {
+        userId: {
+            type: mongoose.Schema.Types.ObjectId, 
+            ref: 'User',
+            required: true
+        },
+        username: {
+            type: String,
+            required: true
+        }
+    }
+   
 }
 
 const schema = new mongoose.Schema({

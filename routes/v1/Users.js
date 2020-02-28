@@ -88,6 +88,24 @@ router.post("/users/login",  async (req, res, next) => {
     }
 });
 
-// router.get()
+router.get("/users/history", isAuth.authenticate("jwt", {session: false} ), async (req, res) =>{
+    // const token = req.headers["x-access-token"] || req.headers["authorization"];
+    const userId = req.user[0]._id;
+    // console.log("userId: ", userId);
+    try {
+        let checkingUser = await User.findById(userId);
+        console.log(checkingUser);
+        let allTakenExams = checkingUser.examsTaken;
+        console.log(allTakenExams);
+        res.send(allTakenExams).status(200);
+    }
+    
+    catch (error) {
+        console.log(error);
+        res.send(error);
+    }
+})
+
+
 
 module.exports = router;
