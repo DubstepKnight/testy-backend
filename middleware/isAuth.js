@@ -14,6 +14,7 @@ module.exports = passport.use(new JwtStrategy(options, (payload, done) => {
     /* Here you could do some processing based on the JWT payload.
     For example check if the key is still valid based on expires property.
     */
+    console.log(payload);
     const now = Date.now() / 1000;
     if(payload.exp > now) {
         console.log("Passed an if statement in JWT auth");
