@@ -9,7 +9,8 @@ router.post("/exams",
             isAuth.authenticate("jwt", {session: false}),
             isTeacher, 
             async (req, res) =>{
-        console.log(req.body);
+        console.log('body: ', req.body);
+        console.log('header: ', req.body.headers);
         console.log("isRandom: ", req.body.isRandom);
         let exam = req.body;
         try {
