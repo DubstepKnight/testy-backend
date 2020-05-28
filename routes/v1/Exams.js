@@ -6,8 +6,8 @@ const isAuth = require("../../middleware/isAuth");
 const isTeacher = require("../../middleware/isTeacher");
 
 router.post("/exams", 
-            // isAuth.authenticate("jwt", {session: false}),
-            // isTeacher, 
+            isAuth.authenticate("jwt", {session: false}),
+            isTeacher, 
             async (req, res) =>{
         console.log('body: ', req.body);
         console.log('header: ', req.body.headers);
