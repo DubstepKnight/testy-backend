@@ -21,8 +21,10 @@ router.post("/questions",
     }
 });
 
-router.get("/questions", isAuth.authenticate("jwt", { session: false } ), async (req, res) =>{
-    console.log(req.body);
+router.get("/questions", 
+           isAuth.authenticate("jwt", { session: false } ), 
+           async (req, res) => {
+    console.log("/questions: ", req.body);
     if (req.body.questions) {
         let questionIds = req.body.questions;
         try {
