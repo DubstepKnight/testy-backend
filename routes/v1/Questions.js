@@ -21,10 +21,10 @@ router.post("/questions",
     }
 });
 
-router.get("/questions", 
-           isAuth.authenticate("jwt", { session: false } ), 
+router.post("/questions/get", 
+        //    isAuth.authenticate("jwt", { session: false } ), 
            async (req, res) => {
-    console.log("/questions: ", req.body);
+    console.log("/questions: ", req.query);
     if (req.body.questions) {
         let questionIds = req.body.questions;
         try {
@@ -64,17 +64,19 @@ router.get("/questions",
     }
 });
 
-router.get("/questions/:id", isAuth.authenticate("jwt", { session: false } ), async (req, res) =>{
-    console.log(req.params.id);
-    let questionId = req.params.id;
-    try {
-        let oneQuestion = await Questions.findById(questionId);
-        res.send(oneQuestion).status(202);
-    }
-    catch(error) {
-        console.log(error);
-        res.send(error);
-    }
+router.get("/questions/:id", 
+    isAuth.authenticate("jwt", { session: false } ),
+    async (req, res) => {
+        console.log(req.params.id);
+        let questionId = req.params.id;
+        try {
+            let oneQuestion = await Questions.findById(questionId);
+            res.send(oneQuestion).status(202);
+        }
+        catch(error) {
+            console.log(error);
+            res.send(error);
+        }
 });
 
 router.put("/questions/:id", 
