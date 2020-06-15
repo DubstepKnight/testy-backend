@@ -9,11 +9,11 @@ router.post("/questions",
             isAuth.authenticate("jwt", { session: false } ), 
             isTeacher,
             async (req, res) =>{
-    console.log(req.body);
+    console.log('req.body: ', req.body);
     try {
         let newQuestion =  await Questions.create(req.body);
-        console.log(newQuestion);
-        res.send(newQuestion).status(202);
+            console.log(newQuestion);
+            res.send(newQuestion).status(202);
     }
     catch(error) {
         console.log(error);
@@ -22,36 +22,29 @@ router.post("/questions",
 });
 
 router.post("/questions/get", 
-        //    isAuth.authenticate("jwt", { session: false } ), 
+        //    isAuth.authe {nticate("jwt", { session: false } ), 
            async (req, res) => {
     console.log("/questions: ", req.query);
     if (req.body.questions) {
         let questionIds = req.body.questions;
-        try {
-            let severalQuestions = await Questions.find({
-                _id: { $in: questionIds}
-            })
-            console.log(severalQuestions);
-            res.send(severalQuestions);
-        }
-        catch(error) {
-            console.log(error);
-            res.send(error);
-        }
-    } else if (req.body.isRandom === true) {
-        console.log("the questions are random");
-        let numberOfQuestions = req.body.numberOfQuestionsIfRandom;
-        try {
-            // let randomQuestions = await Questions.find({
-            let randomizedQuestions = await Questions.aggregate([{$sample: {size: numberOfQuestions}}])
-            console.log(randomizedQuestions);
-            res.send(randomizedQuestions);
-            // })
-        } 
-        catch (error) {
-            console.log(error);
-            res.send(error).status(404);
-        }
+        // if ( req.body.isRandom ) {
+
+        // } else {
+            try {
+                let severalQuestions = await Questions.find({
+                    _id: { $in: questionIds}
+                })
+                console.log(severalQuestions);
+                res.send(severalQuestions);
+            }
+            catch(error) {
+                console.log(error);
+                res.send(error);
+            }
+        // }
+    }
+    if ( req.body.isRandom ) {
+        console.log('req.body.isRandom: ', req.body.isRandom);
     } else {
         try {
             let allQuestions = await Questions.find();

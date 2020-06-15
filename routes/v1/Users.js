@@ -106,6 +106,22 @@ router.get("/users/history", isAuth.authenticate("jwt", {session: false} ), asyn
     }
 })
 
+router.get("/users/allStudents", isAuth.authenticate("jwt", {session: false} ), 
+                                 async (req, res) =>{
+    // const userId = req.user[0]._id;
+    try {
+        let allStudents = await User.find({isTeacher: false});
+        console.log('allStudents: ', allStudents);
+        // let allTakenExams = checkingUser.examsTaken;
+        // console.log(allTakenExams);
+        res.send(allStudents).status(200);
+    }
+    catch (error) {
+        console.log(error);
+        res.send(error);
+    }
+})
+
 
 
 module.exports = router;

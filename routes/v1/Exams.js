@@ -2,6 +2,7 @@ const express = require("express");
 const router = new express.Router();
 const Exam = require("../../models/Exam");
 const User = require("../../models/User");
+const Question = require("../../models/Question");
 const isAuth = require("../../middleware/isAuth");
 const isTeacher = require("../../middleware/isTeacher");
 
@@ -9,19 +10,32 @@ router.post("/exams",
             isAuth.authenticate("jwt", {session: false}),
             isTeacher, 
             async (req, res) =>{
-        console.log('body: ', req.body);
-        console.log('header: ', req.body.headers);
-        console.log("isRandom: ", req.body.isRandom);
+        // console.log('body: ', req.body);
+        // console.log('header: ', req.body.headers);
+        // console.log("isRandom: ", req.body.isRandom);
         let exam = req.body;
         try {
-            let maximumPoints = exam.questions.reduce((accumulator, currentValue) => accumulator + currentValue.questionValue, 0)
-            let almostNewExam = {
-                ...exam,
-                maximumPoints
-            }
-            let newExam = await Exam.create(almostNewExam);
-            console.log(newExam);
-            res.send(newExam).status(201);
+            console.log('exam: ', exam);
+            // if ( req.body.isRandom ) {
+            //     let numberOfQuestions = parseInt(req.body.numberOfQuestionsIfRandom, 10);
+            //     // console.log('numberOfQuestions: ', numberOfQuestions);
+            //     let randomizedQuestions = await Question.aggregate([{$sample: {size: numberOfQuestions}}])
+            //     // console.log('randomizedQuestions: ', randomizedQuestions);
+            //     let newRandomizedExam = {
+            //         ...exam,
+            //         ...await Exam.create(randomizedQuestions)
+            //     };
+            //     console.log('newRandomizedExam: ', newRandomizedExam);
+            //     res.send(randomizedQuestions);
+            // } else {
+                let maximumPoints = exam.questions.reduce((accumulator, currentValue) => accumulator + currentValue.questionValue, 0)
+                let almostNewExam = {
+                    ...exam,
+                    maximumPoints
+                }
+                let newExam = await Exam.create(almostNewExam);
+                console.log(newExam);
+                res.send(newExam).status(201);
         }
         catch(error) {
             console.log(error);
