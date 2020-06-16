@@ -27,9 +27,6 @@ router.post("/questions/get",
     console.log("/questions: ", req.query);
     if (req.body.questions) {
         let questionIds = req.body.questions;
-        // if ( req.body.isRandom ) {
-
-        // } else {
             try {
                 let severalQuestions = await Questions.find({
                     _id: { $in: questionIds}
@@ -42,8 +39,7 @@ router.post("/questions/get",
                 res.send(error);
             }
         // }
-    }
-    if ( req.body.isRandom ) {
+    } else if ( req.body.isRandom ) {
         console.log('req.body.isRandom: ', req.body.isRandom);
     } else {
         try {
