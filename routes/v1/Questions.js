@@ -27,7 +27,7 @@ router.post("/questions/get",
     console.log("/questions: ", req.query);
     // console.log('req.body: ', req.body);
     // console.log('req.body.isRandom: ', req.body.isRandom);
-    if (req.body.questions.length ) {
+    if ( req.body.questions && req.body.questions.length ) {
     console.log('req.body.questions: ', req.body.questions);
         let questionIds = req.body.questions;
             try {
@@ -49,10 +49,12 @@ router.post("/questions/get",
         try {
             let randomQuestions = await Questions.aggregate([
                 { $match: { category: req.body.category} },
-                // { $sample: { size: req. }}
+                { $sample: { size: req.body.numberOfQuestionsIfRandom }}
             ])
+            res.send(randomQuestions).status(202);
         } catch (error) {
-            
+            console.log('error: ', error);
+            res.send(error);
         }
     } else {
         try {
