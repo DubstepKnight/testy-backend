@@ -52,10 +52,6 @@ const schema = new mongoose.Schema({
     updatedAt:{
         type: Date
     },
-    maximumPoints: {
-        type: Number,
-        required: true
-    },
     questions: [{type: mongoose.Schema.Types.ObjectId, ref: 'Question'}],
     category: String,
     examsTaken: [examTaken]

@@ -28,12 +28,7 @@ router.post("/exams",
             //     console.log('newRandomizedExam: ', newRandomizedExam);
             //     res.send(randomizedQuestions);
             // } else {
-                let maximumPoints = exam.questions.reduce((accumulator, currentValue) => accumulator + currentValue.questionValue, 0)
-                let almostNewExam = {
-                    ...exam,
-                    maximumPoints
-                }
-                let newExam = await Exam.create(almostNewExam);
+                let newExam = await Exam.create(exam);
                 console.log(newExam);
                 res.send(newExam).status(201);
         }
