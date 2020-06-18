@@ -16,10 +16,6 @@ const schema = new mongoose.Schema({
         type: String,
         required: true
     },
-    points: {
-        type: Number,
-        required: true
-    },
     category: {
         type: String,
         required: true

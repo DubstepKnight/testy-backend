@@ -25,10 +25,8 @@ router.post("/questions/get",
         //    isAuth.authenticate("jwt", { session: false } ), 
            async (req, res) => {
     console.log("/questions: ", req.query);
-    // console.log('req.body: ', req.body);
-    // console.log('req.body.isRandom: ', req.body.isRandom);
     if ( req.body.questions && req.body.questions.length ) {
-    console.log('req.body.questions: ', req.body.questions);
+        console.log('req.body.questions: ', req.body.questions);
         let questionIds = req.body.questions;
             try {
                 let severalQuestions = await Questions.find({
@@ -41,7 +39,6 @@ router.post("/questions/get",
                 console.log(error);
                 res.send(error);
             }
-        // }
     }  
     if ( req.body.isRandom ) {
         console.log('req.body.isRandom: ', req.body.isRandom);
@@ -49,7 +46,7 @@ router.post("/questions/get",
         try {
             let randomQuestions = await Questions.aggregate([
                 { $match: { category: req.body.category} },
-                { $sample: { size: req.body.numberOfQuestionsIfRandom }}
+                { $sample: { size: parseInt(req.body.numberOfQuestionsIfRandom, 10) }}
             ])
             res.send(randomQuestions).status(202);
         } catch (error) {
