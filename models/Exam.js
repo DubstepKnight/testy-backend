@@ -9,10 +9,6 @@ const questionForExamTaken = {
     rightAnswer: {
         type: String,
         required: true
-    },
-    questionValue: {
-        type: Number,
-        required: true
     }
 }
 

@@ -50,23 +50,23 @@ router.post("/exams/take",
     try {
         let examBeingTaken = await Exam.findById(examId);
         console.log("examBeingTaken: ", examBeingTaken);
-        // examBeingTaken.examsTaken.push(takenExamData);
-        // console.log("examBeingTaken.examsTaken.takenBy: ", examBeingTaken.examsTaken);
-        // let updatedExam = await examBeingTaken.save();
-        // let examTaker = await User.findById(takenExamData.takenBy);
-        // let correctAnswers = takenExamData.questions.filter(question => question.answer === question.rightAnswer).reduce(
-        //     (accumulator, currentValue) => accumulator + currentValue.questionValue, 0);
-        // let examHistoryData = {
-        //     examId: examId,
-        //     correctAnswers: correctAnswers,
-        //     maximumPoints: takenExamData.maximumPoints,
-        // }
-        // examTaker.examsTaken.push(examHistoryData);
-        // let updateHistory = await examTaker.save();
-        // let wholeResponse = {
-        //     updatedExam,
-        //     updateHistory
-        // };
+        examBeingTaken.examsTaken.push(takenExamData);
+        console.log("examBeingTaken.examsTaken.takenBy: ", examBeingTaken.examsTaken);
+        let updatedExam = await examBeingTaken.save();
+        let examTaker = await User.findById(takenExamData.takenBy);
+        let correctAnswers = takenExamData.questions.filter(question => question.answer === question.rightAnswer).reduce(
+            (accumulator, currentValue) => accumulator + currentValue.questionValue, 0);
+        let examHistoryData = {
+            examId: examId,
+            correctAnswers: correctAnswers,
+            // maximumPoints: takenExamData.maximumPoints,
+        }
+        examTaker.examsTaken.push(examHistoryData);
+        let updateHistory = await examTaker.save();
+        let wholeResponse = {
+            updatedExam,
+            updateHistory
+        };
         res.send(wholeResponse).status(201);
     }
     catch(error) {
