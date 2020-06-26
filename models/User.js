@@ -1,11 +1,11 @@
 const mongoose = require("mongoose");
 const ExamsTakenSchema = {
     examId: mongoose.Schema.Types.ObjectId,
-    correctAnswers: {
-        type: Number,
+    examName: {
+        type: String,
         required: true
     },
-    maximumPoints: {
+    correctAnswers: {
         type: Number,
         required: true
     },
