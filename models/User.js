@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const ExamsTakenSchema = {
     examId: mongoose.Schema.Types.ObjectId,
-    pointsGot: {
+    correctAnswers: {
         type: Number,
         required: true
     },

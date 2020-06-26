@@ -41,35 +41,36 @@ router.post("/exams",
 router.post("/exams/take", 
             isAuth.authenticate("jwt", {session: false} ), 
             async (req, res) =>{
-    console.log(req.body);
+    console.log('req.body: ', req.body);
     let examId = req.body.examId;
+    console.log('examId: ', examId);
     let takenExamData = req.body.takenExamData;
     let username = req.user[0].username;
     console.log("username: ", username);
     try {
         let examBeingTaken = await Exam.findById(examId);
-        examBeingTaken.examsTaken.push(takenExamData);
         console.log("examBeingTaken: ", examBeingTaken);
-        console.log("examBeingTaken.examsTaken.takenBy: ", examBeingTaken.examsTaken);
-        let updatedExam = await examBeingTaken.save();
-        let examTaker = await User.findById(takenExamData.takenBy);
-        let acquredPoints = takenExamData.questions.filter(question => question.answer === question.rightAnswer).reduce(
-            (accumulator, currentValue) => accumulator + currentValue.questionValue, 0);
-        let examHistoryData = {
-            examId: examId,
-            pointsGot: acquredPoints,
-            maximumPoints: takenExamData.maximumPoints,
-        }
-        examTaker.examsTaken.push(examHistoryData);
-        let updateHistory = await examTaker.save();
-        let wholeResponse = {
-            updatedExam,
-            updateHistory
-        };
+        // examBeingTaken.examsTaken.push(takenExamData);
+        // console.log("examBeingTaken.examsTaken.takenBy: ", examBeingTaken.examsTaken);
+        // let updatedExam = await examBeingTaken.save();
+        // let examTaker = await User.findById(takenExamData.takenBy);
+        // let correctAnswers = takenExamData.questions.filter(question => question.answer === question.rightAnswer).reduce(
+        //     (accumulator, currentValue) => accumulator + currentValue.questionValue, 0);
+        // let examHistoryData = {
+        //     examId: examId,
+        //     correctAnswers: correctAnswers,
+        //     maximumPoints: takenExamData.maximumPoints,
+        // }
+        // examTaker.examsTaken.push(examHistoryData);
+        // let updateHistory = await examTaker.save();
+        // let wholeResponse = {
+        //     updatedExam,
+        //     updateHistory
+        // };
         res.send(wholeResponse).status(201);
     }
     catch(error) {
-        console.log(error);
+        console.log('error: ', error);
         res.send(error);
     }
 })
@@ -148,6 +149,7 @@ router.get("/exams/:id/history/",
     try {
         console.log(req.params.id);
         let historyOfOneExam = await Exam.findById(examId);
+        console.log(historyOfOneExam);
         console.log(historyOfOneExam.examsTaken);
         res.send(historyOfOneExam.examsTaken).status(200);
     }
@@ -159,11 +161,12 @@ router.get("/exams/:id/history/",
 
 router.get("/exams/history/:userId",
            isAuth.authenticate("jwt", {session: false} ),
-           isTeacher,
+        //    isTeacher,
            async (req, res) => {
     console.log("it gets to exams/history");
     try {
         console.log(req.params.userId);
+        let allTaken
     }
     catch (error) {
         console.log(error);
