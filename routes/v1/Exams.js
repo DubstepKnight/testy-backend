@@ -41,19 +41,12 @@ router.post("/exams",
 router.post("/exams/take", 
             isAuth.authenticate("jwt", {session: false} ), 
             async (req, res) =>{
-    // console.log('req.body: ', req.body);
     let examId = req.body.examId;
-    // console.log('examId: ', examId);
     let takenExamData = req.body.takenExamData;
     let examName = req.body.examName;
     let username = req.user[0].username;
-    // console.log("username: ", username);
     try {
         let examBeingTaken = await Exam.findById(examId);
-        // console.log("examBeingTaken: ", examBeingTaken);
-        examBeingTaken.examsTaken.push(takenExamData);
-        // console.log("examBeingTaken.examsTaken.takenBy: ", examBeingTaken.examsTaken);
-        let updatedExam = await examBeingTaken.save();
         console.log('takenExamData: ', takenExamData.questions);
         let examTaker = await User.findById(takenExamData.takenBy.userId);
         if ( takenExamData.questions ) {
@@ -65,16 +58,18 @@ router.post("/exams/take",
                 correctAnswers: correctAnswers,
             }
             console.log('examHistoryData: ', examHistoryData);
-            examTaker.examsTaken.push(examHistoryData);
             console.log('examTaker.examsTaken: ', examTaker.examsTaken);
+            examTaker.examsTaken.push(examHistoryData);
+            examBeingTaken.examsTaken.push(takenExamData);
+            let updatedExam = await examBeingTaken.save();
+            let updateHistory = await examTaker.save();
+            let wholeResponse = {
+                    updatedExam,
+                    updateHistory
+                };
+            console.log('wholeResponse: ', wholeResponse);
+            res.send(wholeResponse).status(201);
         }
-        let updateHistory = await examTaker.save();
-        let wholeResponse = {
-                updatedExam,
-                updateHistory
-            };
-        console.log('wholeResponse: ', wholeResponse);
-        res.send(wholeResponse).status(201);
     }
     catch(error) {
         console.log('error: ', error);
