@@ -166,14 +166,27 @@ router.get("/exams/:id/history/",
     }
 })
 
-router.get("/exams/history/:userId",
+router.get("/exams/history/:userId/:examId",
            isAuth.authenticate("jwt", {session: false} ),
-        //    isTeacher,
            async (req, res) => {
     console.log("it gets to exams/history");
+    const givenUserId = req.params.userId;
+    const givenExamId = req.params.examId;
     try {
-        console.log(req.params.userId);
-        let allTaken
+        console.log('userId: ', givenUserId);
+        console.log('examId: ', givenExamId);
+        let oneExamHistory = await Exam.findById(givenExamId);
+        console.log('oneExamHistory: ', oneExamHistory);
+        let resultOnOneExamByAUser = oneExamHistory.examsTaken.filter(takenExam => takenExam.takenBy.userId == givenUserId)
+        console.log('resultOnOneExamByAUser: ', resultOnOneExamByAUser);
+        let dataToSend = {
+            name: oneExamHistory.name,
+            category: oneExamHistory.category,
+            attempts: [...resultOnOneExamByAUser],
+            isRandom: oneExamHistory.isRandom,
+            _id: oneExamHistory._id,
+        }
+        res.send(dataToSend).status(200);
     }
     catch (error) {
         console.log(error);

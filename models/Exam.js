@@ -25,7 +25,6 @@ const examTaken = {
             required: true
         }
     }
-   
 }
 
 const schema = new mongoose.Schema({
@@ -33,7 +32,7 @@ const schema = new mongoose.Schema({
         type: String,
         required: true
     },
-    personalFor: [{type: mongoose.Schema.Types.ObjectId, ref: 'User'}],
+    personalFor: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
     numberOfQuestionsIfRandom: {
         type: Number
     },
