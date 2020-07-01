@@ -13,8 +13,16 @@ const questionForExamTaken = {
 }
 
 const examTaken = {
-   questions: [questionForExamTaken],
-   takenBy: {
+    questions: [questionForExamTaken],
+    correctAnswers: {
+        type: Number,
+        required: true
+    },
+    totalNumberOfQuestions: {
+        type: Number,
+        required: true
+    },
+    takenBy: {
         userId: {
             type: mongoose.Schema.Types.ObjectId, 
             ref: 'User',
@@ -32,7 +40,7 @@ const schema = new mongoose.Schema({
         type: String,
         required: true
     },
-    personalFor: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+    personalFor: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
     numberOfQuestionsIfRandom: {
         type: Number
     },

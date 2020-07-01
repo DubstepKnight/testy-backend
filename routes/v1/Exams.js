@@ -51,16 +51,23 @@ router.post("/exams/take",
         let examTaker = await User.findById(takenExamData.takenBy.userId);
         if ( takenExamData.questions ) {
             let correctAnswers = takenExamData.questions.filter(question => question.answer === question.rightAnswer).length
+            let totalNumberOfQuestions = takenExamData.questions.length;
             console.log('correctAnswers: ', correctAnswers);
             let examHistoryData = {
                 examId: examId,
                 examName: examName,
                 correctAnswers: correctAnswers,
             }
-            console.log('examHistoryData: ', examHistoryData);
-            console.log('examTaker.examsTaken: ', examTaker.examsTaken);
+            let updatedTakenExamData = {
+                ...takenExamData,
+                correctAnswers: correctAnswers,
+                totalNumberOfQuestions: totalNumberOfQuestions 
+            };
+            console.log('updatedTakenExamData: ', updatedTakenExamData);
+            // console.log('examHistoryData: ', examHistoryData);
+            // console.log('examTaker.examsTaken: ', examTaker.examsTaken);
             examTaker.examsTaken.push(examHistoryData);
-            examBeingTaken.examsTaken.push(takenExamData);
+            examBeingTaken.examsTaken.push(updatedTakenExamData);
             let updatedExam = await examBeingTaken.save();
             let updateHistory = await examTaker.save();
             let wholeResponse = {
