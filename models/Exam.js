@@ -1,7 +1,13 @@
 const mongoose = require("mongoose");
 
 const questionForExamTaken = {
-    question: {type: mongoose.Schema.Types.ObjectId, ref: 'Question'},
+    question: { 
+        id: { type: mongoose.Schema.Types.ObjectId, ref: 'Question' },
+        questionItself: {
+            type: String,
+            required: true
+        }
+    },
     answer: {
         type: String,
         required: true
