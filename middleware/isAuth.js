@@ -17,12 +17,12 @@ module.exports = passport.use(new JwtStrategy(options, (payload, done) => {
     console.log(payload);
     const now = Date.now() / 1000;
     if(payload.exp > now) {
-        console.log("Passed an if statement in JWT auth");
+        // console.log("Passed an if statement in JWT auth");
         // console.log("line 25, isTeacher",  isTeacher);
-        console.log("payload: ", payload);
+        // console.log("payload: ", payload);
         done(null, payload);
     } else /* expired */ {
-        console.log("Did not pass an if statement in JWT auth");
+        // console.log("Did not pass an if statement in JWT auth");
         done(null, false);
     }
   }));

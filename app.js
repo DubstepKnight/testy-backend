@@ -26,10 +26,10 @@ const mongoose = require("mongoose");
             useNewUrlParser: true,
             useUnifiedTopology: true
         })
-        console.log("mongodb is connected ...");
+        // console.log("mongodb is connected ...");
     }
     catch(e){
-        console.log(e);
+        // console.log(e);
     }
 })();
 module.exports = app;

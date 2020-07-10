@@ -9,14 +9,14 @@ router.post("/questions",
             isAuth.authenticate("jwt", { session: false } ), 
             isTeacher,
             async (req, res) =>{
-    console.log('req.body: ', req.body);
+    // console.log('req.body: ', req.body);
     try {
         let newQuestion =  await Questions.create(req.body);
-            console.log(newQuestion);
+            // console.log(newQuestion);
             res.send(newQuestion).status(202);
     }
     catch(error) {
-        console.log(error);
+        // console.log(error);
         res.send(error);
     }
 });
@@ -24,25 +24,25 @@ router.post("/questions",
 router.post("/questions/get", 
         //    isAuth.authenticate("jwt", { session: false } ), 
            async (req, res) => {
-    console.log("/questions: ", req.query);
+    // console.log("/questions: ", req.query);
     if ( req.body.questions && req.body.questions.length ) {
-        console.log('req.body.questions: ', req.body.questions);
+        // console.log('req.body.questions: ', req.body.questions);
         let questionIds = req.body.questions;
             try {
                 let severalQuestions = await Questions.find({
                     _id: { $in: questionIds}
                 })
-                console.log(severalQuestions);
+                // console.log(severalQuestions);
                 res.send(severalQuestions);
             }
             catch(error) {
-                console.log(error);
+                // console.log(error);
                 res.send(error);
             }
     }  
     if ( req.body.isRandom ) {
-        console.log('req.body.isRandom: ', req.body.isRandom);
-        console.log('the shit is random dude!');
+        // console.log('req.body.isRandom: ', req.body.isRandom);
+        // console.log('the shit is random dude!');
         try {
             let randomQuestions = await Questions.aggregate([
                 { $match: { category: req.body.category} },
@@ -50,7 +50,7 @@ router.post("/questions/get",
             ])
             res.send(randomQuestions).status(202);
         } catch (error) {
-            console.log('error: ', error);
+            // console.log('error: ', error);
             res.send(error);
         }
     } else {
@@ -59,7 +59,7 @@ router.post("/questions/get",
             res.send(allQuestions).status(202);
         }
         catch(error) {
-            console.log(error);
+            // console.log(error);
             res.send(error);
         }
     }
@@ -68,14 +68,14 @@ router.post("/questions/get",
 router.get("/questions/:id", 
     isAuth.authenticate("jwt", { session: false } ),
     async (req, res) => {
-        console.log(req.params.id);
+        // console.log(req.params.id);
         let questionId = req.params.id;
         try {
             let oneQuestion = await Questions.findById(questionId);
             res.send(oneQuestion).status(202);
         }
         catch(error) {
-            console.log(error);
+            // console.log(error);
             res.send(error);
         }
 });
@@ -106,14 +106,14 @@ router.delete("/questions/:id",
             isAuth.authenticate("jwt", { session: false } ), 
             isTeacher,
             async (req, res) =>{
-    console.log(req.params.id);
+    // console.log(req.params.id);
     let questionId = req.params.id;
     try {
         let oneQuestion = await Questions.findByIdAndDelete(questionId);
         res.send(oneQuestion).status(202);
     }
     catch(error) {
-        console.log(error);
+        // console.log(error);
         res.send(error);
     }
 });

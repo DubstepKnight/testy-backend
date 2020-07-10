@@ -58,7 +58,7 @@ router.post("/users/register",  async (req, res, next) => {
     } 
     catch(err){
         res.status(500).json({err});
-        console.log(err);
+        // console.log(err);
     }
 })
 
@@ -75,16 +75,16 @@ router.post("/users/login",  async (req, res, next) => {
             token: generateToken(user)
         }
         if ( hashChecked === user[0].password ) {
-            console.log("correct");
+            // console.log("correct");
             res.status(202).json({userAndToken});
         } else {
-            console.log("incorrect");
+            // console.log("incorrect");
             res.sendStatus(401);
         }
     }
     catch(err) {
         res.status(500).json({err});
-        console.log(err);
+        // console.log(err);
     }
 });
 
@@ -94,14 +94,14 @@ router.get("/users/history", isAuth.authenticate("jwt", {session: false} ), asyn
     // console.log("userId: ", userId);
     try {
         let checkingUser = await User.findById(userId);
-        console.log(checkingUser);
+        // console.log(checkingUser);
         let allTakenExams = checkingUser.examsTaken;
-        console.log(allTakenExams);
+        // console.log(allTakenExams);
         res.send(allTakenExams).status(200);
     }
     
     catch (error) {
-        console.log(error);
+        // console.log(error);
         res.send(error);
     }
 })
@@ -112,13 +112,13 @@ router.get("/users/allStudents",
     // const userId = req.user[0]._id;
     try {
         let allStudents = await User.find({isTeacher: false});
-        console.log('allStudents: ', allStudents);
+        // console.log('allStudents: ', allStudents);
         // let allTakenExams = checkingUser.examsTaken;
         // console.log(allTakenExams);
         res.send(allStudents).status(200);
     }
     catch (error) {
-        console.log(error);
+        // console.log(error);
         res.send(error);
     }
 })

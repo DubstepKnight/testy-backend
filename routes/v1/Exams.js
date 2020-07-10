@@ -15,7 +15,7 @@ router.post("/exams",
         // console.log("isRandom: ", req.body.isRandom);
         let exam = req.body;
         try {
-            console.log('exam: ', exam);
+            // console.log('exam: ', exam);
             // if ( req.body.isRandom ) {
             //     let numberOfQuestions = parseInt(req.body.numberOfQuestionsIfRandom, 10);
             //     // console.log('numberOfQuestions: ', numberOfQuestions);
@@ -29,11 +29,11 @@ router.post("/exams",
             //     res.send(randomizedQuestions);
             // } else {
                 let newExam = await Exam.create(exam);
-                console.log(newExam);
+                // console.log(newExam);
                 res.send(newExam).status(201);
         }
         catch(error) {
-            console.log(error);
+            // console.log(error);
             res.send(error);
         }
 })
@@ -47,12 +47,12 @@ router.post("/exams/take",
     let username = req.user[0].username;
     try {
         let examBeingTaken = await Exam.findById(examId);
-        console.log('takenExamData: ', takenExamData.questions);
+        // console.log('takenExamData: ', takenExamData.questions);
         let examTaker = await User.findById(takenExamData.takenBy.userId);
         if ( takenExamData.questions ) {
             let correctAnswers = takenExamData.questions.filter(question => question.answer === question.rightAnswer).length
             let totalNumberOfQuestions = takenExamData.questions.length;
-            console.log('correctAnswers: ', correctAnswers);
+            // console.log('correctAnswers: ', correctAnswers);
             let examHistoryData = {
                 examId: examId,
                 examName: examName,
@@ -63,7 +63,7 @@ router.post("/exams/take",
                 correctAnswers: correctAnswers,
                 totalNumberOfQuestions: totalNumberOfQuestions 
             };
-            console.log('updatedTakenExamData: ', updatedTakenExamData);
+            // console.log('updatedTakenExamData: ', updatedTakenExamData);
             // console.log('examHistoryData: ', examHistoryData);
             // console.log('examTaker.examsTaken: ', examTaker.examsTaken);
             examTaker.examsTaken.push(examHistoryData);
@@ -74,12 +74,12 @@ router.post("/exams/take",
                     updatedExam,
                     updateHistory
                 };
-            console.log('wholeResponse: ', wholeResponse);
+            // console.log('wholeResponse: ', wholeResponse);
             res.send(wholeResponse).status(201);
         }
     }
     catch(error) {
-        console.log('error: ', error);
+        // console.log('error: ', error);
         res.send(error);
     }
 })
@@ -87,11 +87,11 @@ router.post("/exams/take",
 router.get("/exams", isAuth.authenticate("jwt", {session: false} ), async (req, res, next) => {
     try{
         const exams = await Exam.find();
-        console.log(exams);
+        // console.log(exams);
         res.status(202).json({exams});
     }
     catch(err){
-        console.log(err);
+        // console.log(err);
         res.status(500).json({err});
     }
 });
@@ -106,7 +106,7 @@ router.get("/exams/:id", isAuth.authenticate("jwt", {session: false} ), async (r
         // console.log("It managed");
     }
     catch(error) {
-        console.log(error);
+        // console.log(error);
         res.send(error);
     }
 });
@@ -127,9 +127,9 @@ router.put("/exams/:id",
         res.send(editedExam).status(200);
     }
     catch(error) {
-        console.log(error);
+        // console.log(error);
         res.send(error).status(500);
-        console.log("There is your error");
+        // console.log("There is your error");
     }
 });
 
@@ -140,11 +140,11 @@ router.delete("/exams/:id",
     let examId = req.params.id;
     try {
        const oneExam = await Exam.findByIdAndDelete(examId);
-       console.log(oneExam);
+    //    console.log(oneExam);
        res.send(oneExam).status(200)
     }
     catch(error) {
-        console.log(error);
+        // console.log(error);
         res.send(error).status(500);
     }
 });
@@ -154,16 +154,16 @@ router.get("/exams/:id/history/",
            isTeacher,
            async (req, res) => {
     let examId = req.params.id;
-    console.log("it gets to exams/history");
+    // console.log("it gets to exams/history");
     try {
-        console.log(req.params.id);
+        // console.log(req.params.id);
         let historyOfOneExam = await Exam.findById(examId);
-        console.log(historyOfOneExam);
-        console.log(historyOfOneExam.examsTaken);
+        // console.log(historyOfOneExam);
+        // console.log(historyOfOneExam.examsTaken);
         res.send(historyOfOneExam.examsTaken).status(200);
     }
     catch (error) {
-        console.log(error);
+        // console.log(error);
         res.send(error).status(400);
     }
 })
@@ -171,16 +171,16 @@ router.get("/exams/:id/history/",
 router.get("/exams/history/:userId/:examId",
            isAuth.authenticate("jwt", {session: false} ),
            async (req, res) => {
-    console.log("it gets to exams/history");
+    // console.log("it gets to exams/history");
     const givenUserId = req.params.userId;
     const givenExamId = req.params.examId;
     try {
-        console.log('userId: ', givenUserId);
-        console.log('examId: ', givenExamId);
+        // console.log('userId: ', givenUserId);
+        // console.log('examId: ', givenExamId);
         let oneExamHistory = await Exam.findById(givenExamId);
-        console.log('oneExamHistory: ', oneExamHistory);
+        // console.log('oneExamHistory: ', oneExamHistory);
         let resultOnOneExamByAUser = oneExamHistory.examsTaken.filter(takenExam => takenExam.takenBy.userId == givenUserId)
-        console.log('resultOnOneExamByAUser: ', resultOnOneExamByAUser);
+        // console.log('resultOnOneExamByAUser: ', resultOnOneExamByAUser);
         let dataToSend = {
             name: oneExamHistory.name,
             category: oneExamHistory.category,
@@ -191,7 +191,7 @@ router.get("/exams/history/:userId/:examId",
         res.send(dataToSend).status(200);
     }
     catch (error) {
-        console.log(error);
+        // console.log(error);
         res.send(error).status(400);
     }
 })
